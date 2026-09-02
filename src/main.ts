@@ -177,6 +177,52 @@ app.innerHTML = `
         </div>
       </section>
 
+      <div class="pre-observation-tools" aria-label="예측 및 모형 이해">
+        <section class="prediction-section">
+          <button
+            class="prediction-toggle"
+            id="prediction-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="prediction-content"
+          >
+            <span><strong>Prediction Mode</strong><small>먼저 예측하고, 그다음 계산 결과와 비교하기</small></span>
+            <i class="accordion-chevron" aria-hidden="true">⌄</i>
+          </button>
+          <div class="prediction-content" id="prediction-content" hidden>
+            <label for="scenario-select">탐구 질문</label>
+            <select id="scenario-select"></select>
+            <fieldset id="prediction-fieldset">
+              <legend id="prediction-question"></legend>
+              <div id="prediction-options"></div>
+            </fieldset>
+            <p class="prediction-instruction">예측을 선택한 뒤 <strong>Run</strong>을 누르세요. 이 탐구 질문은 Basic model을 기준으로 하며, 현재 조건에서 한 번에 한 변수만 바꿉니다.</p>
+            <div id="prediction-result" class="prediction-result" role="status" aria-live="polite" hidden></div>
+          </div>
+        </section>
+
+        <details class="assumptions">
+          <summary><span>Model assumptions · 이 모형의 가정과 한계</span><i class="accordion-chevron" aria-hidden="true">⌄</i></summary>
+          <div class="assumption-content">
+            <div>
+              <h3>기본 Lotka-Volterra 모형의 가정</h3>
+              <ul>
+                <li>피식자의 먹이는 무한하며, 포식자가 없으면 제한 없이 증가합니다.</li>
+                <li>두 종은 공간 구조 없이 무작위로 만납니다.</li>
+                <li>포식자에게는 이 피식자 외의 먹이가 없습니다.</li>
+                <li>계절과 환경 조건이 변하지 않습니다.</li>
+                <li>개체의 나이, 질병, 이동, 유전적 차이를 고려하지 않습니다.</li>
+              </ul>
+            </div>
+            <div>
+              <h3>그래프를 해석할 때</h3>
+              <p>기본 모형의 닫힌 궤적은 안정점으로 수렴하는 결과가 아니라 초기 조건에 따라 결정되는 중립적 주기 궤적입니다. 실제 자연에서는 환경 변화와 밀도 의존성 때문에 완벽히 같은 진동이 반복되지 않을 수 있습니다.</p>
+              <p><strong>More realistic model</strong>은 피식자에 환경수용력 K를 적용하여 ‘먹이가 무한하다’는 가정 일부를 완화합니다.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
       <section class="chart-section" aria-labelledby="chart-heading">
         <div class="chart-heading-row">
           <div>
@@ -251,43 +297,6 @@ app.innerHTML = `
         </article>
       </section>
 
-      <section class="prediction-section">
-        <label class="prediction-toggle" for="prediction-toggle">
-          <input id="prediction-toggle" type="checkbox" />
-          <span><strong>Prediction Mode</strong><small>먼저 예측하고, 그다음 계산 결과와 비교하기</small></span>
-        </label>
-        <div class="prediction-content" id="prediction-content" hidden>
-          <label for="scenario-select">탐구 질문</label>
-          <select id="scenario-select"></select>
-          <fieldset id="prediction-fieldset">
-            <legend id="prediction-question"></legend>
-            <div id="prediction-options"></div>
-          </fieldset>
-          <p class="prediction-instruction">예측을 선택한 뒤 <strong>Run</strong>을 누르세요. 이 탐구 질문은 Basic model을 기준으로 하며, 현재 조건에서 한 번에 한 변수만 바꿉니다.</p>
-          <div id="prediction-result" class="prediction-result" role="status" aria-live="polite" hidden></div>
-        </div>
-      </section>
-
-      <details class="assumptions">
-        <summary>Model assumptions · 이 모형의 가정과 한계</summary>
-        <div class="assumption-content">
-          <div>
-            <h3>기본 Lotka-Volterra 모형의 가정</h3>
-            <ul>
-              <li>피식자의 먹이는 무한하며, 포식자가 없으면 제한 없이 증가합니다.</li>
-              <li>두 종은 공간 구조 없이 무작위로 만납니다.</li>
-              <li>포식자에게는 이 피식자 외의 먹이가 없습니다.</li>
-              <li>계절과 환경 조건이 변하지 않습니다.</li>
-              <li>개체의 나이, 질병, 이동, 유전적 차이를 고려하지 않습니다.</li>
-            </ul>
-          </div>
-          <div>
-            <h3>그래프를 해석할 때</h3>
-            <p>기본 모형의 닫힌 궤적은 안정점으로 수렴하는 결과가 아니라 초기 조건에 따라 결정되는 중립적 주기 궤적입니다. 실제 자연에서는 환경 변화와 밀도 의존성 때문에 완벽히 같은 진동이 반복되지 않을 수 있습니다.</p>
-            <p><strong>More realistic model</strong>은 피식자에 환경수용력 K를 적용하여 ‘먹이가 무한하다’는 가정 일부를 완화합니다.</p>
-          </div>
-        </div>
-      </details>
     </section>
   </main>
 `;
@@ -308,7 +317,7 @@ const timeOutput = requiredElement<HTMLElement>('#time-output');
 const runButton = requiredElement<HTMLButtonElement>('#run-button');
 const liveButton = requiredElement<HTMLButtonElement>('#live-button');
 const pauseButton = requiredElement<HTMLButtonElement>('#pause-button');
-const predictionToggle = requiredElement<HTMLInputElement>('#prediction-toggle');
+const predictionToggle = requiredElement<HTMLButtonElement>('#prediction-toggle');
 const predictionContent = requiredElement<HTMLDivElement>('#prediction-content');
 const scenarioSelect = requiredElement<HTMLSelectElement>('#scenario-select');
 const predictionQuestion = requiredElement<HTMLElement>('#prediction-question');
@@ -585,7 +594,7 @@ document.querySelectorAll<HTMLButtonElement>('[data-chart-view]').forEach((butto
 
 runButton.addEventListener('click', () => {
   pauseLive('');
-  if (predictionToggle.checked && !applyPredictionScenario()) return;
+  if (predictionToggle.getAttribute('aria-expanded') === 'true' && !applyPredictionScenario()) return;
   recompute(false);
   selectedTime = DEFAULT_DURATION;
   visibleUntil = DEFAULT_DURATION;
@@ -649,9 +658,11 @@ predictionScenarios.forEach((scenario) => {
   scenarioSelect.append(option);
 });
 
-predictionToggle.addEventListener('change', () => {
-  predictionContent.hidden = !predictionToggle.checked;
-  if (predictionToggle.checked) {
+predictionToggle.addEventListener('click', () => {
+  const isExpanded = predictionToggle.getAttribute('aria-expanded') !== 'true';
+  predictionToggle.setAttribute('aria-expanded', String(isExpanded));
+  predictionContent.hidden = !isExpanded;
+  if (isExpanded) {
     if (model !== 'basic') {
       pauseLive('탐구 모드: 기본 모형으로 전환');
       model = 'basic';
