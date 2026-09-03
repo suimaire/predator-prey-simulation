@@ -103,6 +103,39 @@ h3 {
   padding: 28px 0 56px;
 }
 
+.portal-nav {
+  margin-bottom: 12px;
+  padding-inline: 4px;
+}
+
+.portal-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid #bdcfc3;
+  border-radius: 9px;
+  color: #315341;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+
+.portal-link:hover {
+  border-color: #8aa398;
+  background: #e8f0e9;
+}
+
+.portal-link:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
 .app-header {
   display: flex;
   align-items: flex-end;

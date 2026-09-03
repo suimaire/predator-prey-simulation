@@ -128,6 +128,9 @@ const parameterMarkup = parameterDefinitions.map((definition) => {
 }).join('');
 
 app.innerHTML = `
+  <nav class="portal-nav" aria-label="과학 수업 포털 안내">
+    <a class="portal-link" href="https://suimaire.github.io/" aria-label="과학 수업 포털로 돌아가기">← 과학 수업 포털</a>
+  </nav>
   <header class="app-header">
     <div>
       <p class="eyebrow">INTERACTIVE ECOLOGY LAB</p>
