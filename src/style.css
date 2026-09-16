@@ -1243,3 +1243,28 @@ body[data-model="logistic"] .carrying-capacity-control {
     min-height: 44px;
   }
 }
+
+/* 페이지 하단 브랜드 footer (index.html) */
+.site-brand-footer {
+  width: min(1580px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 18px 0 16px;
+  border-top: 1px solid var(--line);
+  text-align: center;
+}
+
+.site-brand-footer p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.site-brand-footer__name {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.site-brand-footer__credit {
+  color: var(--muted);
+  font-size: 12px;
+}
