@@ -128,28 +128,27 @@ const parameterMarkup = parameterDefinitions.map((definition) => {
 }).join('');
 
 app.innerHTML = `
-  <nav class="portal-nav" aria-label="과학 수업 포털 안내">
-    <a class="portal-link" href="https://suimaire.github.io/" aria-label="과학 수업 포털로 돌아가기">← 과학 수업 포털</a>
+  <nav class="crumbs" aria-label="현재 위치">
+    <a href="https://suimaire.github.io/">과학 수업 포털</a>
+    <span aria-hidden="true">/</span>
+    <span>통합과학2 · 생태계와 개체군</span>
   </nav>
   <header class="app-header">
     <div>
-      <p class="eyebrow">INTERACTIVE ECOLOGY LAB</p>
       <h1>포식자-피식자 동역학 실험실</h1>
-      <p class="header-description">피식자의 변화가 먼저, 포식자의 반응이 뒤따르는 이유를 직접 조작하며 확인해 보세요.</p>
+      <p class="header-description">피식자가 먼저 변하고 포식자가 뒤따르는 이유를, 값을 바꿔 가며 직접 확인해 보세요.</p>
+      <p class="how-to"><b>사용 방법</b> ‘조건 설정’에서 값을 정하고 <b>실행</b>을 누른 뒤, 그래프를 눌러 그 시점의 개체수를 확인하세요.</p>
     </div>
     <div class="model-switch" role="group" aria-label="수학 모형 선택">
-      <button type="button" class="model-button is-active" data-model="basic" aria-pressed="true">Basic model</button>
-      <button type="button" class="model-button" data-model="logistic" aria-pressed="false">More realistic model</button>
+      <button type="button" class="model-button is-active" data-model="basic" aria-pressed="true">기본 모형</button>
+      <button type="button" class="model-button" data-model="logistic" aria-pressed="false">확장 모형 <small>환경수용력 K</small></button>
     </div>
   </header>
 
   <main class="app-layout">
     <aside class="control-panel" aria-label="변수 조절 패널">
       <div class="panel-heading">
-        <div>
-          <p class="section-kicker">VARIABLES</p>
-          <h2>조건 설정</h2>
-        </div>
+        <h2>조건 설정</h2>
         <button type="button" class="text-button" id="restore-defaults">기본값으로 돌아가기</button>
       </div>
       <div class="parameter-list">${parameterMarkup}</div>
@@ -157,7 +156,7 @@ app.innerHTML = `
       <section class="formula-card" aria-labelledby="formula-heading">
         <div class="formula-card-heading">
           <h3 id="formula-heading">사용 중인 방정식</h3>
-          <span id="model-badge">표준 모형</span>
+          <span id="model-badge">기본 모형</span>
         </div>
         <div class="formula" id="prey-equation">dN/dt = αN − βNP</div>
         <div class="formula">dP/dt = δNP − γP</div>
@@ -168,11 +167,11 @@ app.innerHTML = `
     <section class="workspace" aria-label="시뮬레이션 결과">
       <section class="simulation-toolbar" aria-label="시뮬레이션 조작">
         <div class="button-group">
-          <button type="button" class="primary-action" id="run-button"><span class="button-symbol">▶</span> Run <small>20년</small></button>
-          <button type="button" id="live-button"><span class="button-symbol">●</span> Live</button>
-          <button type="button" id="pause-button" disabled><span class="button-symbol">Ⅱ</span> Pause</button>
-          <button type="button" id="step-button">Step <small>+0.25년</small></button>
-          <button type="button" id="reset-button">Reset</button>
+          <button type="button" class="primary-action" id="run-button" title="20년 결과를 한 번에 계산합니다">▶ 실행 <small>20년</small></button>
+          <button type="button" id="live-button" title="0년부터 천천히 그려 봅니다">천천히 재생</button>
+          <button type="button" id="pause-button" disabled>일시정지</button>
+          <button type="button" id="step-button">한 단계 <small>+0.25년</small></button>
+          <button type="button" id="reset-button">처음으로</button>
         </div>
         <div class="run-status" aria-live="polite">
           <span class="status-dot" id="status-dot"></span>
@@ -189,7 +188,7 @@ app.innerHTML = `
             aria-expanded="false"
             aria-controls="prediction-content"
           >
-            <span><strong>Prediction Mode</strong><small>먼저 예측하고, 그다음 계산 결과와 비교하기</small></span>
+            <span><strong>예측 모드</strong><small>결과를 먼저 예상한 뒤, 실행해서 맞는지 확인합니다.</small></span>
             <i class="accordion-chevron" aria-hidden="true">⌄</i>
           </button>
           <div class="prediction-content" id="prediction-content" hidden>
@@ -199,13 +198,13 @@ app.innerHTML = `
               <legend id="prediction-question"></legend>
               <div id="prediction-options"></div>
             </fieldset>
-            <p class="prediction-instruction">예측을 선택한 뒤 <strong>Run</strong>을 누르세요. 이 탐구 질문은 Basic model을 기준으로 하며, 현재 조건에서 한 번에 한 변수만 바꿉니다.</p>
+            <p class="prediction-instruction">예측을 고른 뒤 <strong>실행</strong>을 누르세요. 이 질문들은 기본 모형을 기준으로 하며, 지금 조건에서 변수 하나만 바꿉니다.</p>
             <div id="prediction-result" class="prediction-result" role="status" aria-live="polite" hidden></div>
           </div>
         </section>
 
         <details class="assumptions">
-          <summary><span>Model assumptions · 이 모형의 가정과 한계</span><i class="accordion-chevron" aria-hidden="true">⌄</i></summary>
+          <summary><span>이 모형의 가정과 한계</span><i class="accordion-chevron" aria-hidden="true">⌄</i></summary>
           <div class="assumption-content">
             <div>
               <h3>기본 Lotka-Volterra 모형의 가정</h3>
@@ -220,7 +219,7 @@ app.innerHTML = `
             <div>
               <h3>그래프를 해석할 때</h3>
               <p>기본 모형의 닫힌 궤적은 안정점으로 수렴하는 결과가 아니라 초기 조건에 따라 결정되는 중립적 주기 궤적입니다. 실제 자연에서는 환경 변화와 밀도 의존성 때문에 완벽히 같은 진동이 반복되지 않을 수 있습니다.</p>
-              <p><strong>More realistic model</strong>은 피식자에 환경수용력 K를 적용하여 ‘먹이가 무한하다’는 가정 일부를 완화합니다.</p>
+              <p><strong>확장 모형</strong>은 피식자에 환경수용력 K를 적용하여 ‘먹이가 무한하다’는 가정 일부를 완화합니다.</p>
             </div>
           </div>
         </details>
@@ -228,20 +227,17 @@ app.innerHTML = `
 
       <section class="chart-section" aria-labelledby="chart-heading">
         <div class="chart-heading-row">
-          <div>
-            <p class="section-kicker">POPULATION DYNAMICS</p>
-            <h2 id="chart-heading">개체군 변화</h2>
-          </div>
+          <h2 id="chart-heading">개체군 변화</h2>
           <div class="chart-tabs" role="tablist" aria-label="그래프 보기 방식">
-            <button type="button" data-chart-view="time" class="is-active" role="tab" aria-selected="true">Time graph</button>
-            <button type="button" data-chart-view="phase" role="tab" aria-selected="false">Phase plot</button>
-            <button type="button" data-chart-view="both" role="tab" aria-selected="false">동시 보기</button>
+            <button type="button" data-chart-view="time" class="is-active" role="tab" aria-selected="true">시간 그래프</button>
+            <button type="button" data-chart-view="phase" role="tab" aria-selected="false">위상 그래프</button>
+            <button type="button" data-chart-view="both" role="tab" aria-selected="false">함께 보기</button>
           </div>
         </div>
         <div class="legend" aria-label="그래프 범례">
           <span><i class="legend-mark prey-mark"></i>피식자 N</span>
           <span><i class="legend-mark predator-mark"></i>포식자 P</span>
-          <span class="legend-hint">그래프를 마우스나 손가락으로 짚어 보세요.</span>
+          <span class="legend-hint">그래프를 누르거나 끌면 그 시점의 값이 보여요.</span>
         </div>
         <div class="charts" id="charts-container">
           <div class="chart-panel" id="time-chart-panel">
@@ -261,10 +257,7 @@ app.innerHTML = `
       <section class="insight-grid">
         <article class="ecosystem-panel">
           <div class="panel-heading">
-            <div>
-              <p class="section-kicker">CURRENT ECOSYSTEM</p>
-              <h2>현재 생태계</h2>
-            </div>
+            <h2>지금 생태계</h2>
             <div class="current-time" id="current-time">0.00년</div>
           </div>
           <div class="population-readout">
@@ -286,8 +279,7 @@ app.innerHTML = `
         </article>
 
         <article class="feedback-panel">
-          <p class="section-kicker">NEGATIVE FEEDBACK</p>
-          <h2>지금 순환의 어느 단계일까?</h2>
+          <h2>음성 피드백: 지금 어느 단계일까?</h2>
           <p class="feedback-explanation" id="feedback-explanation"></p>
           <ol class="feedback-cycle" id="feedback-cycle">
             <li><span>1</span><strong>피식자 증가</strong><small>이용할 먹이가 많아짐</small></li>
@@ -404,7 +396,7 @@ function applyPredictionScenario(): boolean {
   if (!choice) {
     predictionResult.hidden = false;
     predictionResult.dataset.result = 'warning';
-    predictionResult.innerHTML = '<strong>예측을 먼저 선택해 주세요.</strong><span>예측을 기록한 뒤 결과를 확인하는 것이 탐구 모드의 핵심입니다.</span>';
+    predictionResult.innerHTML = '<strong>예측을 먼저 골라 주세요.</strong><span>예상을 정해 두고 결과와 비교해야 무엇이 달랐는지 알 수 있어요.</span>';
     return false;
   }
   const scenario = currentScenario();
@@ -517,7 +509,7 @@ function updateModelUI(): void {
     button.setAttribute('aria-pressed', String(active));
   });
   document.body.dataset.model = model;
-  requiredElement('#model-badge').textContent = model === 'basic' ? '표준 모형' : '환경수용력 포함';
+  requiredElement('#model-badge').textContent = model === 'basic' ? '기본 모형' : '환경수용력 포함';
   requiredElement('#prey-equation').textContent = model === 'basic'
     ? 'dN/dt = αN − βNP'
     : 'dN/dt = αN(1 − N/K) − βNP';
@@ -614,7 +606,7 @@ liveButton.addEventListener('click', () => {
   isLive = true;
   liveButton.disabled = true;
   pauseButton.disabled = false;
-  setRunStatus('실시간 진행 중', 'live');
+  setRunStatus('재생 중', 'live');
   animationFrameId = requestAnimationFrame(liveLoop);
 });
 
@@ -667,7 +659,7 @@ predictionToggle.addEventListener('click', () => {
   predictionContent.hidden = !isExpanded;
   if (isExpanded) {
     if (model !== 'basic') {
-      pauseLive('탐구 모드: 기본 모형으로 전환');
+      pauseLive('예측 모드: 기본 모형으로 바뀜');
       model = 'basic';
       recompute();
       updateModelUI();
